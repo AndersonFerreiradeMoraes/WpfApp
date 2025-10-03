@@ -1,0 +1,78 @@
+<UserControl x:Class="WpfApp.Views.PedidosView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:WpfApp.ViewModels">
+    <UserControl.DataContext>
+        <vm:PedidosViewModel />
+    </UserControl.DataContext>
+
+    <Grid Margin="8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Formulário de criação de pedido -->
+        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+            <TextBlock Text="Pessoa" FontWeight="Bold"/>
+            <ComboBox ItemsSource="{Binding Pessoas}" DisplayMemberPath="Nome" SelectedItem="{Binding SelectedPessoa}" />
+
+            <TextBlock Text="Produto" FontWeight="Bold" Margin="0,8,0,0"/>
+            <ComboBox ItemsSource="{Binding Produtos}" DisplayMemberPath="Nome" SelectedItem="{Binding SelectedProduto}" />
+
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Text="Quantidade:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBox Width="60" Text="{Binding Quantidade, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <TextBlock Text="Forma de Pagamento" FontWeight="Bold" Margin="0,8,0,0"/>
+            <ComboBox SelectedValuePath="Content" SelectedValue="{Binding FormaPagamento}" Margin="0,4,0,0">
+                <ComboBoxItem Content="Dinheiro"/>
+                <ComboBoxItem Content="Cartão"/>
+                <ComboBoxItem Content="Boleto"/>
+            </ComboBox>
+
+            <Button Content="Criar Pedido (novo)" Width="150" Margin="0,12,0,0" Click="CriarPedido_Click"/>
+            <Button Content="Adicionar Produto ao Pedido" Width="200" Margin="0,6,0,0" Click="AdicionarProduto_Click"/>
+            <Button Content="Finalizar Pedido (salvar)" Width="200" Margin="0,6,0,0" Click="FinalizarPedido_Click"/>
+        </StackPanel>
+
+        <!-- Lista de pedidos e botões de filtro/status -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Botões de filtro -->
+                <RowDefinition Height="*"/>
+                <!-- DataGrid -->
+                <RowDefinition Height="Auto"/>
+                <!-- Botões de status -->
+            </Grid.RowDefinitions>
+
+            <!-- Botões de filtro -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,8" Grid.Row="0">
+                <Button Content="Mostrar Todos" Click="MostrarTodos_Click" Margin="0,0,8,0"/>
+                <Button Content="Mostrar Pendentes" Click="MostrarPendentes_Click" Margin="0,0,8,0"/>
+                <Button Content="Mostrar Pagos" Click="MostrarPagos_Click" Margin="0,0,8,0"/>
+            </StackPanel>
+
+            <!-- DataGrid de pedidos -->
+            <DataGrid Grid.Row="1" x:Name="dgPedidos" ItemsSource="{Binding Pedidos}" AutoGenerateColumns="False" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="50"/>
+                    <DataGridTextColumn Header="Pessoa" Binding="{Binding PessoaNome}" Width="150"/>
+                    <DataGridTextColumn Header="Data" Binding="{Binding DataVenda}" Width="150"/>
+                    <DataGridTextColumn Header="Valor Total" Binding="{Binding ValorTotal}" Width="100"/>
+                    <DataGridTextColumn Header="Pagamento" Binding="{Binding FormaPagamento}" Width="100"/>
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Botões de status (embaixo do DataGrid) -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0" Grid.Row="2">
+                <Button Content="Marcar Pago" Width="100" Click="MarcarPago_Click"/>
+                <Button Content="Marcar Enviado" Width="120" Click="MarcarEnviado_Click" Margin="8,0,0,0"/>
+                <Button Content="Marcar Recebido" Width="130" Click="MarcarRecebido_Click" Margin="8,0,0,0"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>
